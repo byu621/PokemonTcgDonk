@@ -1,8 +1,12 @@
+import { CardType } from "./Card";
+
 class ABEC {
+    id: number;
+    type: CardType = 'tool'
     name = "Ancient Booster Energy Capsule";
 
-    action() {
-        return "BruteBonnet"
+    constructor(id: number) {
+        this.id = id;
     }
 }
 

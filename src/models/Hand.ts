@@ -18,8 +18,10 @@ class Hand {
         this.cards = this.cards.filter(c => c.id !== id);
     }
 
-    addCard(card: Card, i: number) {
-        this.cards = this.cards.splice(i, 0, card);
+    addCard(card: Card, i?: number) {
+        i === undefined ?
+            this.cards.push(card) :
+            this.cards = this.cards.splice(i, 0, card);
     }
 }
 

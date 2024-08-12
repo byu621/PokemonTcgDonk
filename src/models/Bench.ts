@@ -28,6 +28,12 @@ class Bench {
     revertAttachTool(i: number) {
         this.bench[i].tool--;
     }
+
+    isInvalid() {
+        if (this.bench.length > 5) return true;
+        if (this.bench.some(e => e.tool !== 0 && e.tool !== 1)) return true;
+        return false;
+    }
 }
 
 export default Bench;

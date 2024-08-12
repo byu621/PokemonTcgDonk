@@ -16,15 +16,9 @@ import Simulation from "./Simulation";
 
 class Game {
     simulate1000() {
-        let pass = 0;
-        let fail = 0;
-
-        for (let i = 0; i < 1000; i++) {
-            const simulation = new Simulation();
-            simulation.recurse() ? pass++ : fail++;
-        }
-
-        return pass / (pass + fail)
+        const simulation = new Simulation();
+        const passPercentage = simulation.simulate();
+        return passPercentage;
     }
 }
 
