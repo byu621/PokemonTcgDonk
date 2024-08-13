@@ -10,6 +10,10 @@ class Hand {
         return this.cards.length;
     }
 
+    clear() {
+        this.cards.length = 0;
+    }
+
     getCard(i: number) {
         return this.cards[i];
     }
@@ -22,6 +26,10 @@ class Hand {
         i === undefined ?
             this.cards.push(card) :
             this.cards = this.cards.splice(i, 0, card);
+    }
+
+    addCards(cards: Card[]) {
+        this.cards.push(...cards);
     }
 }
 

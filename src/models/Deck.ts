@@ -4,29 +4,40 @@ import BruteBonnet from './cards/BruteBonnet';
 import ABEC from './cards/ABEC';
 
 class Deck {
-    private cards: Card[] = [];
+    private deck: Card[] = [];
     private cardId = 0;
 
     constructor() {
-        this.cards.push(new BruteBonnet(this.cardId++));
-        this.cards.push(new ABEC(this.cardId++));
-        this.cards = _.shuffle(this.cards);
+        this.deck.push(new BruteBonnet(this.cardId++));
+        this.deck.push(new BruteBonnet(this.cardId++));
+        this.deck.push(new ABEC(this.cardId++));
+        this.deck.push(new ABEC(this.cardId++));
+        this.deck.push(new ABEC(this.cardId++));
+        this.deck.push(new ABEC(this.cardId++));
     }
 
     length() {
-        return this.cards.length;
+        return this.deck.length;
     }
 
     pop() {
-        return this.cards.pop();
+        return this.deck.pop();
     }
 
-    choose(i: number) {
-        return this.cards.splice(i, 1)[0];
+    chooseMany(indices: number[]): Card[] {
+        const cards: Card[] = [];
+        for (let i = indices.length - 1; i >= 0; i--) {
+            cards.push(...this.deck.splice(indices[i], 1));
+        }
+
+        _.reverse(cards);
+        return cards;
     }
 
-    revertChoose(card: Card, i: number) {
-        this.cards.splice(i, 0, card);
+    revertChooseMany(cards: Card[], indices: number[]) {
+        cards.forEach((c, i) => {
+            this.deck.splice(indices[i], 0, c);
+        })
     }
 }
 

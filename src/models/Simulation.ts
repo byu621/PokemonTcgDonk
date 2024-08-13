@@ -19,16 +19,17 @@ class Simulation {
         let total = 0;
         let count = 0;
 
-        for (let i = 0; i < this.deck.length(); i++) {
-            let card: Card = this.deck.choose(i);
-            this.hand.addCard(card);
+        const startingHandCombinations = this.generateCombinations(this.deck.length(), 2);
+        startingHandCombinations.forEach((startingHandCombination) => {
+            let startingHand: Card[] = this.deck.chooseMany(startingHandCombination);
+            this.hand.addCards(startingHand);
 
             total += this.recurse();
             count++;
 
-            this.deck.revertChoose(card, i);
-            this.hand.removeCard(card.id);
-        }
+            this.deck.revertChooseMany(startingHand, startingHandCombination);
+            this.hand.clear();
+        });
 
         return total / count;
     }
@@ -37,7 +38,7 @@ class Simulation {
         if (this.bench.isInvalid()) return 0;
 
         // win condition
-        if (this.bench.length() > 0) return 1;
+        if (this.bench.isWin()) return 1;
 
         let passPercentage = 0;
 
@@ -63,7 +64,25 @@ class Simulation {
         return passPercentage;
     }
 
+    generateCombinations(n: number, k: number): number[][] {
+        // Helper function to recursively build the combinations
+        function combine(start: number, combo: number[]): void {
+            // If the combination is of length k, push it to the results and return
+            if (combo.length === k) {
+                results.push(combo.slice()); // Make a copy of combo
+                return;
+            }
+            for (let i = start; i < n; i++) {
+                combo.push(i);
+                combine(i + 1, combo);
+                combo.pop(); // Backtrack
+            }
+        }
 
+        const results: number[][] = [];
+        combine(0, []);
+        return results;
+    }
 }
 
 export default Simulation;

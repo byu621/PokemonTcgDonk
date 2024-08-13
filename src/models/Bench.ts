@@ -34,6 +34,10 @@ class Bench {
         if (this.bench.some(e => e.tool !== 0 && e.tool !== 1)) return true;
         return false;
     }
+
+    isWin() {
+        return this.bench.some(e => e.tool === 1);
+    }
 }
 
 export default Bench;
