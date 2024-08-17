@@ -56,7 +56,23 @@ class Simulation {
                     this.hand.removeCard(card.id);
                     passPercentage = Math.max(this.recurse(), passPercentage);
                     this.bench.revertAttachTool(j);
-                    this.hand.addCard(card, j);
+                    this.hand.addCard(card, i);
+                }
+            } else if (card.type === 'item') {
+                if (card.name === 'Nest Ball') {
+                    this.hand.removeCard(card.id);
+                    passPercentage = Math.max(this.recurse(), passPercentage);
+                    this.hand.addCard(card, i)
+
+                    this.deck.pokemonIndex().forEach((j) => {
+                        const pokemon = this.deck.removeCard(j);
+                        this.bench.benchPokemon(pokemon);
+                        this.hand.removeCard(card.id);
+                        passPercentage = Math.max(this.recurse(), passPercentage);
+                        this.bench.revertBenchPokemon();
+                        this.hand.addCard(card, i);
+                        this.deck.addCard(pokemon, j);
+                    })
                 }
             }
         }

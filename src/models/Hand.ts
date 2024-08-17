@@ -25,7 +25,7 @@ class Hand {
     addCard(card: Card, i?: number) {
         i === undefined ?
             this.cards.push(card) :
-            this.cards = this.cards.splice(i, 0, card);
+            this.cards.splice(i, 0, card);
     }
 
     addCards(cards: Card[]) {

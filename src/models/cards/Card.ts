@@ -4,6 +4,6 @@ interface Card {
     type: CardType
 }
 
-export type CardType = 'pokemon' | 'tool'
+export type CardType = 'pokemon' | 'tool' | 'item'
 
 export default Card;

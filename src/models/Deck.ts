@@ -2,6 +2,7 @@ import _ from 'lodash'
 import Card from './cards/Card';
 import BruteBonnet from './cards/BruteBonnet';
 import ABEC from './cards/ABEC';
+import NestBall from './cards/NestBall';
 
 class Deck {
     private deck: Card[] = [];
@@ -14,6 +15,7 @@ class Deck {
         this.deck.push(new ABEC(this.cardId++));
         this.deck.push(new ABEC(this.cardId++));
         this.deck.push(new ABEC(this.cardId++));
+        this.deck.push(new NestBall(this.cardId++))
     }
 
     length() {
@@ -38,6 +40,21 @@ class Deck {
         cards.forEach((c, i) => {
             this.deck.splice(indices[i], 0, c);
         })
+    }
+
+    pokemonIndex(): number[] {
+        const indices = this.deck
+            .map((card, index) => (card.type === 'pokemon' ? index : -1)) // Map to index or -1
+            .filter(index => index !== -1); // Filter out -1 values
+        return indices;
+    }
+
+    removeCard(i: number): Card {
+        return this.deck.splice(i, 1)[0];
+    }
+
+    addCard(card: Card, i: number) {
+        this.deck.splice(i, 0, card);
     }
 }
 
