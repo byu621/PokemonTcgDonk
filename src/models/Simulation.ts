@@ -1,11 +1,6 @@
 import Bench from "./Bench";
 import CardCollection from "./CardCollection";
-import ABEC from "./cards/ABEC";
-import BruteBonnet from "./cards/BruteBonnet";
 import Card from "./cards/Card";
-import NestBall from "./cards/NestBall";
-import TrekkingShoes from "./cards/TrekkingShoes";
-import UltraBall from "./cards/UltraBall";
 
 // achieve optimal play
 // what is optimal play
@@ -20,17 +15,21 @@ class Simulation {
     private bench = new Bench();
 
     constructor() {
-        this.deck.push(new BruteBonnet());
-        this.deck.push(new BruteBonnet());
-        this.deck.push(new BruteBonnet());
-        this.deck.push(new BruteBonnet());
-        this.deck.push(new ABEC());
-        this.deck.push(new ABEC());
-        this.deck.push(new ABEC());
-        this.deck.push(new ABEC());
-        // this.deck.push(new NestBall());
-        // this.deck.push(new TrekkingShoes());
-        this.deck.push(new UltraBall());
+        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
+        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
+        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
+        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
+        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
+        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
+        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
+        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
+        this.deck.push({ name: 'Nest Ball', type: 'item' });
+        // this.deck.push({ name: 'Trekking Shoes', type: 'item' });
+        // this.deck.push({ name: 'Ultra Ball', type: 'item' });
     }
 
     simulate() {
