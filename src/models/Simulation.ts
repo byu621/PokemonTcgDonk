@@ -16,22 +16,7 @@ class Simulation {
     private bench = new Bench();
 
     simulate() {
-        let total = 0;
-        let count = 0;
-
-        const startingHandCombinations = this.generateCombinations(this.deck.length(), 2);
-        startingHandCombinations.forEach((startingHandCombination) => {
-            let startingHand: Card[] = this.deck.chooseMany(startingHandCombination);
-            this.hand.addCards(startingHand);
-
-            total += this.recurse();
-            count++;
-
-            this.deck.revertChooseMany(startingHand, startingHandCombination);
-            this.hand.clear();
-        });
-
-        return total / count;
+        return this.drawN(2);
     }
 
     recurse(): number {
@@ -72,11 +57,34 @@ class Simulation {
                     })
 
                     this.hand.addCard(card, i)
+                } else if (card.name === 'Trekking Shoes') {
+                    this.hand.removeCard(card.id);
+                    passPercentage = Math.max(this.drawN(1), passPercentage);
+                    this.hand.addCard(card, i);
                 }
             }
         }
 
         return passPercentage;
+    }
+
+    drawN(n: number) {
+        let total = 0;
+        let count = 0;
+
+        const startingHandCombinations = this.generateCombinations(this.deck.length(), n);
+        startingHandCombinations.forEach((startingHandCombination) => {
+            let drawnCards: Card[] = this.deck.chooseMany(startingHandCombination);
+            this.hand.addCards(drawnCards);
+
+            total += this.recurse();
+            count++;
+
+            this.deck.revertChooseMany(drawnCards, startingHandCombination);
+            this.hand.popCards(n);
+        });
+
+        return total / count;
     }
 
     generateCombinations(n: number, k: number): number[][] {

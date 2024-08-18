@@ -3,6 +3,7 @@ import Card from './cards/Card';
 import BruteBonnet from './cards/BruteBonnet';
 import ABEC from './cards/ABEC';
 import NestBall from './cards/NestBall';
+import TrekkingShoes from './cards/TrekkingShoes';
 
 class Deck {
     private deck: Card[] = [];
@@ -15,7 +16,8 @@ class Deck {
         this.deck.push(new ABEC(this.cardId++));
         this.deck.push(new ABEC(this.cardId++));
         this.deck.push(new ABEC(this.cardId++));
-        this.deck.push(new NestBall(this.cardId++))
+        this.deck.push(new NestBall(this.cardId++));
+        this.deck.push(new TrekkingShoes(this.cardId++));
     }
 
     length() {

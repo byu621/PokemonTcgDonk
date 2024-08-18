@@ -31,6 +31,10 @@ class Hand {
     addCards(cards: Card[]) {
         this.cards.push(...cards);
     }
+
+    popCards(n: number) {
+        this.cards.splice(-n, n);
+    }
 }
 
 export default Hand;
