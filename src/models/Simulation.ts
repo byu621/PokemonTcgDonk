@@ -1,6 +1,8 @@
-import Bench from "./Bench";
 import CardCollection from "./CardCollection";
 import Card from "./cards/Card";
+import NestBall from "./cards/NestBall";
+import UltraBall from "./cards/UltraBall";
+import Field from "./Field";
 
 // achieve optimal play
 // what is optimal play
@@ -12,7 +14,7 @@ import Card from "./cards/Card";
 class Simulation {
     private deck = new CardCollection();
     private hand = new CardCollection();
-    private bench = new Bench();
+    private field = new Field();
 
     constructor() {
         this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
@@ -28,62 +30,46 @@ class Simulation {
         this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
         this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
         this.deck.push({ name: 'Nest Ball', type: 'item' });
-        // this.deck.push({ name: 'Trekking Shoes', type: 'item' });
-        // this.deck.push({ name: 'Ultra Ball', type: 'item' });
+        this.deck.push({ name: 'Trekking Shoes', type: 'item' });
+        this.deck.push({ name: 'Ultra Ball', type: 'item' });
     }
 
     simulate() {
-        return this.drawN(4);
+        return this.start(4);
     }
 
     recurse(): number {
-        if (this.bench.isInvalid()) return 0;
-
-        // win condition
-        if (this.bench.isWin()) return 1;
+        if (this.field.isInvalid()) return 0;
+        if (this.field.isWin()) return 1;
 
         let passPercentage = 0;
 
         for (let i = 0; i < this.hand.length(); i++) {
             const card = this.hand.removeCardAtIndex(i);
             if (card.type === 'pokemon') {
-                this.bench.benchPokemon(card);
+                this.field.benchPokemon(card);
                 passPercentage = Math.max(this.recurse(), passPercentage);
-                this.bench.revertBenchPokemon();
-            } else if (card.type === 'tool') {
-                for (let j = 0; j < this.bench.length(); j++) {
-                    this.bench.attachTool(j);
-                    passPercentage = Math.max(this.recurse(), passPercentage);
-                    this.bench.revertAttachTool(j);
-                }
-            } else if (card.type === 'item') {
-                if (card.name === 'Nest Ball') {
-                    passPercentage = Math.max(this.recurse(), passPercentage);
+                this.field.revertBenchPokemon();
+            }
 
-                    this.deck.pokemonIndex().forEach((j) => {
-                        const pokemon = this.deck.removeCardAtIndex(j);
-                        this.bench.benchPokemon(pokemon);
-                        passPercentage = Math.max(this.recurse(), passPercentage);
-                        this.bench.revertBenchPokemon();
-                        this.deck.addCardAtIndex(pokemon, j);
-                    })
-                } else if (card.name === 'Ultra Ball') {
-                    if (this.hand.length() < 3) continue;
-                    const discardedCardCombinations = this.generateCombinations(this.hand.length(), 2);
-                    discardedCardCombinations.forEach((discardedCardCombination) => {
-                        let discardedCards = this.hand.chooseMany(discardedCardCombination);
-                        this.deck.pokemonIndex().forEach((j) => {
-                            const pokemon = this.deck.removeCardAtIndex(j);
-                            this.hand.push(pokemon);
-                            passPercentage = Math.max(this.recurse(), passPercentage);
-                            this.hand.pop(1);
-                            this.deck.addCardAtIndex(pokemon, j);
-                        })
-                        this.hand.revertChooseMany(discardedCards, discardedCardCombination);
-                    })
-                } else if (card.name === 'Trekking Shoes') {
-                    passPercentage = Math.max(this.drawN(1), passPercentage);
+            if (card.type === 'tool') {
+                for (let j = 0; j < this.field.numberOfPokemon(); j++) {
+                    this.field.attachTool(j);
+                    passPercentage = Math.max(this.recurse(), passPercentage);
+                    this.field.revertAttachTool(j);
                 }
+            }
+
+            if (card.name === 'Nest Ball') {
+                passPercentage = NestBall(this, this.deck, this.field, passPercentage);
+            }
+
+            if (card.name === 'Ultra Ball') {
+                passPercentage = UltraBall(this, this.deck, this.hand, passPercentage);
+            }
+
+            if (card.name === 'Trekking Shoes') {
+                passPercentage = Math.max(this.drawN(1), passPercentage);
             }
 
             this.hand.addCardAtIndex(card, i);
@@ -103,6 +89,37 @@ class Simulation {
 
             total += this.recurse();
             count++;
+
+            this.deck.revertChooseMany(drawnCards, startingHandCombination);
+            this.hand.pop(n);
+        });
+
+        return total / count;
+    }
+
+    start(n: number) {
+        let total = 0;
+        let count = 0;
+
+        const startingHandCombinations = this.generateCombinations(this.deck.length(), n);
+        startingHandCombinations.forEach((startingHandCombination) => {
+            let drawnCards: Card[] = this.deck.chooseMany(startingHandCombination);
+
+            if (drawnCards.every(e => e.type !== 'pokemon')) {
+                return;
+            }
+
+            this.hand.push(drawnCards);
+            this.hand.pokemonIndex().forEach(i => {
+                const pokemon = this.hand.removeCardAtIndex(i);
+                this.field.setActive(pokemon);
+
+                total += this.recurse();
+                count++;
+
+                this.field.clear();
+                this.hand.addCardAtIndex(pokemon, i);
+            })
 
             this.deck.revertChooseMany(drawnCards, startingHandCombination);
             this.hand.pop(n);
