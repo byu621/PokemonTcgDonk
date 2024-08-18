@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Card from "./cards/Card";
 
 class Hand {
@@ -34,6 +35,22 @@ class Hand {
 
     popCards(n: number) {
         this.cards.splice(-n, n);
+    }
+
+    chooseMany(indices: number[]): Card[] {
+        const cards: Card[] = [];
+        for (let i = indices.length - 1; i >= 0; i--) {
+            cards.push(...this.cards.splice(indices[i], 1));
+        }
+
+        _.reverse(cards);
+        return cards;
+    }
+
+    revertChooseMany(cards: Card[], indices: number[]) {
+        cards.forEach((c, i) => {
+            this.cards.splice(indices[i], 0, c);
+        })
     }
 }
 

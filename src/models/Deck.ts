@@ -4,6 +4,7 @@ import BruteBonnet from './cards/BruteBonnet';
 import ABEC from './cards/ABEC';
 import NestBall from './cards/NestBall';
 import TrekkingShoes from './cards/TrekkingShoes';
+import UltraBall from './cards/UltraBall';
 
 class Deck {
     private deck: Card[] = [];
@@ -18,6 +19,7 @@ class Deck {
         this.deck.push(new ABEC(this.cardId++));
         this.deck.push(new NestBall(this.cardId++));
         this.deck.push(new TrekkingShoes(this.cardId++));
+        this.deck.push(new UltraBall(this.cardId++));
     }
 
     length() {

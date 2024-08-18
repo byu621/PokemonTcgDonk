@@ -57,6 +57,22 @@ class Simulation {
                     })
 
                     this.hand.addCard(card, i)
+                } else if (card.name === 'Ultra Ball') {
+                    if (this.hand.length() < 3) continue;
+                    this.hand.removeCard(card.id);
+                    const discardedCardCombinations = this.generateCombinations(this.hand.length(), 2);
+                    discardedCardCombinations.forEach((discardedCardCombination) => {
+                        let discardedCards = this.hand.chooseMany(discardedCardCombination);
+                        this.deck.pokemonIndex().forEach((j) => {
+                            const pokemon = this.deck.removeCard(j);
+                            this.hand.addCard(pokemon);
+                            passPercentage = Math.max(this.recurse(), passPercentage);
+                            this.hand.popCards(1);
+                            this.hand.revertChooseMany(discardedCards, discardedCardCombination);
+                        })
+                    })
+
+                    this.hand.addCard(card, i);
                 } else if (card.name === 'Trekking Shoes') {
                     this.hand.removeCard(card.id);
                     passPercentage = Math.max(this.drawN(1), passPercentage);
