@@ -1,5 +1,4 @@
 interface Card {
-    id: number
     name: string
     type: CardType
 }

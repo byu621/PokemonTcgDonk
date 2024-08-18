@@ -1,7 +1,6 @@
 import Card from "./cards/Card";
 
 interface BenchedPokemon {
-    id: number;
     name: string;
     tool: number;
 }
@@ -14,7 +13,7 @@ class Bench {
     }
 
     benchPokemon(card: Card) {
-        this.bench.push({ id: card.id, name: card.name, tool: 0 });
+        this.bench.push({ name: card.name, tool: 0 });
     }
 
     revertBenchPokemon() {
