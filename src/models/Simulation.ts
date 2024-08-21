@@ -1,5 +1,4 @@
 import CardCollection from "./CardCollection";
-import Card from "./cards/Card";
 import NestBall from "./cards/NestBall";
 import UltraBall from "./cards/UltraBall";
 import Field from "./Field";
@@ -17,21 +16,14 @@ class Simulation {
     private field = new Field();
 
     constructor() {
-        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
-        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
-        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
-        this.deck.push({ name: 'Brute Bonnet', type: 'pokemon' });
-        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
-        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
-        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
-        this.deck.push({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
-        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
-        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
-        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
-        this.deck.push({ name: 'Iron Valiant', type: 'pokemon' });
-        this.deck.push({ name: 'Nest Ball', type: 'item' });
-        this.deck.push({ name: 'Trekking Shoes', type: 'item' });
-        this.deck.push({ name: 'Ultra Ball', type: 'item' });
+        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' });
+        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
+        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
+        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
+        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' });
     }
 
     simulate() {
@@ -44,8 +36,9 @@ class Simulation {
 
         let passPercentage = 0;
 
-        for (let i = 0; i < this.hand.length(); i++) {
-            const card = this.hand.removeCardAtIndex(i);
+        for (let card of this.hand.iterateCards()) {
+            this.hand.removeCard(card);
+
             if (card.type === 'pokemon') {
                 this.field.benchPokemon(card);
                 passPercentage = Math.max(this.recurse(), passPercentage);
@@ -72,7 +65,7 @@ class Simulation {
                 passPercentage = Math.max(this.drawN(1), passPercentage);
             }
 
-            this.hand.addCardAtIndex(card, i);
+            this.hand.addCard(card);
         }
 
         return passPercentage;
@@ -82,17 +75,17 @@ class Simulation {
         let total = 0;
         let count = 0;
 
-        const startingHandCombinations = this.generateCombinations(this.deck.length(), n);
-        startingHandCombinations.forEach((startingHandCombination) => {
-            let drawnCards: Card[] = this.deck.chooseMany(startingHandCombination);
-            this.hand.push(drawnCards);
+        const startingHandCombinations = this.deck.getCombinations(n);
+        for (let drawnCards of startingHandCombinations) {
+            this.deck.removeCards(drawnCards);
+            this.hand.addCards(drawnCards);
 
             total += this.recurse();
             count++;
 
-            this.deck.revertChooseMany(drawnCards, startingHandCombination);
-            this.hand.pop(n);
-        });
+            this.deck.addCards(drawnCards);
+            this.hand.removeCards(drawnCards);
+        }
 
         return total / count;
     }
@@ -101,51 +94,30 @@ class Simulation {
         let total = 0;
         let count = 0;
 
-        const startingHandCombinations = this.generateCombinations(this.deck.length(), n);
-        startingHandCombinations.forEach((startingHandCombination) => {
-            let drawnCards: Card[] = this.deck.chooseMany(startingHandCombination);
-
+        const startingHandCombinations = this.deck.getCombinations(n);
+        for (let drawnCards of startingHandCombinations) {
             if (drawnCards.every(e => e.type !== 'pokemon')) {
-                return;
+                continue;
             }
 
-            this.hand.push(drawnCards);
-            this.hand.pokemonIndex().forEach(i => {
-                const pokemon = this.hand.removeCardAtIndex(i);
+            this.deck.removeCards(drawnCards);
+            this.hand.addCards(drawnCards);
+            for (let pokemon of this.hand.iteratePokemon()) {
+                this.hand.removeCard(pokemon);
                 this.field.setActive(pokemon);
 
                 total += this.recurse();
                 count++;
 
                 this.field.clear();
-                this.hand.addCardAtIndex(pokemon, i);
-            })
-
-            this.deck.revertChooseMany(drawnCards, startingHandCombination);
-            this.hand.pop(n);
-        });
-
-        return total / count;
-    }
-
-    generateCombinations(n: number, k: number): number[][] {
-        // Helper function to recursively build the combinations
-        function combine(start: number, combo: number[]): void {
-            // If the combination is of length k, push it to the results and return
-            if (combo.length === k) {
-                results.push(combo.slice()); // Make a copy of combo
-                return;
+                this.hand.addCard(pokemon);
             }
-            for (let i = start; i < n; i++) {
-                combo.push(i);
-                combine(i + 1, combo);
-                combo.pop(); // Backtrack
-            }
+
+            this.deck.addCards(drawnCards);
+            this.hand.removeCards(drawnCards);
         }
 
-        const results: number[][] = [];
-        combine(0, []);
-        return results;
+        return total / count;
     }
 }
 
