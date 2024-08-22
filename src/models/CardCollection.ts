@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import Card from './cards/Card';
+import { combination } from './Math';
 
 class CardCollection {
     private cards: Map<Card, number> = new Map();
@@ -47,16 +48,15 @@ class CardCollection {
         );
     }
 
-    // Ultra Ball
-    getCombinations(n: number): Card[][] {
+    getCombinationsWithFrequencies(n: number): Map<Card[], number> {
         const cards = Array.from(this.cards.keys());
         const counts = Array.from(this.cards.values());
 
-        const result: Card[][] = [];
+        const result: Map<Card[], number> = new Map();
 
-        function recurse(i: number, currentCombination: Card[]) {
+        function recurse(i: number, currentCombination: Card[], frequency: number) {
             if (currentCombination.length === n) {
-                result.push([...currentCombination]);
+                result.set([...currentCombination], frequency);
                 return;
             }
 
@@ -65,41 +65,12 @@ class CardCollection {
 
             for (let j = 0; j <= count && j + currentCombination.length <= n; j++) {
                 for (let k = 0; k < j; k++) currentCombination.push(card);
-                recurse(i + 1, currentCombination);
+                recurse(i + 1, currentCombination, frequency * combination(count, j));
                 currentCombination.splice(-j, j);
             }
         }
 
-        recurse(0, []);
-        return result;
-    }
-
-    // Drawing Cards
-    getUniqueCombinations(n: number): Card[][] {
-        const cards = Array.from(this.cards.keys());
-        const counts = Array.from(this.cards.values());
-
-        const result: Card[][] = [];
-
-        function recurse(i: number, j: number, currentCombination: Card[]) {
-            if (currentCombination.length === n) {
-                result.push([...currentCombination]);
-                return;
-            }
-
-            if (j >= counts[i]) {
-                recurse(i + 1, 0, currentCombination);
-                return;
-            }
-
-            if (i >= cards.length) return;
-            recurse(i, j + 1, currentCombination);
-            currentCombination.push(cards[i]);
-            recurse(i, j + 1, currentCombination);
-            currentCombination.pop();
-        }
-
-        recurse(0, 0, []);
+        recurse(0, [], 1);
         return result;
     }
 }

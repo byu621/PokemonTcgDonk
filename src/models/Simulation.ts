@@ -21,11 +21,11 @@ class Simulation {
     usedSupporter = false;
 
     constructor() {
-        this.deck.addCard({ name: 'Squawkabilly ex', type: 'pokemon' }, 1)
+        this.deck.addCard({ name: 'Squawkabilly ex', type: 'pokemon' }, 2)
         this.deck.addCard({ name: 'Iron Valiant', type: 'pokemon' }, 4);
         this.deck.addCard({ name: 'Switch', type: 'item' }, 4);
-        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' }, 6);
-        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' }, 1);
+        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' }, 4);
+        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' }, 4);
         // this.deck.addCard({ name: 'Ultra Ball', type: 'item' }, 4);
         // this.deck.addCard({ name: 'Nest Ball', type: 'item' }, 4);
         // this.deck.addCard({ name: 'Trekking Shoes', type: 'item' }, 4);
@@ -88,13 +88,13 @@ class Simulation {
         let total = 0;
         let count = 0;
 
-        const startingHandCombinations = this.deck.getUniqueCombinations(n);
-        for (let drawnCards of startingHandCombinations) {
+        const startingHandCombinationsWithFrequencies = this.deck.getCombinationsWithFrequencies(n);
+        for (let [drawnCards, frequency] of startingHandCombinationsWithFrequencies.entries()) {
             this.deck.removeCards(drawnCards);
             this.hand.addCards(drawnCards);
 
-            total += this.recurse();
-            count++;
+            total += this.recurse() * frequency;
+            count += frequency;
 
             this.deck.addCards(drawnCards);
             this.hand.removeCards(drawnCards);
@@ -107,8 +107,8 @@ class Simulation {
         let total = 0;
         let count = 0;
 
-        const startingHandCombinations = this.deck.getUniqueCombinations(n);
-        for (let drawnCards of startingHandCombinations) {
+        const startingHandCombinationsWithFrequencies = this.deck.getCombinationsWithFrequencies(n);
+        for (let [drawnCards, frequency] of startingHandCombinationsWithFrequencies.entries()) {
             if (drawnCards.every(e => e.type !== 'pokemon')) {
                 continue;
             }
@@ -119,8 +119,8 @@ class Simulation {
                 this.hand.removeCard(pokemon);
                 this.field.setActive(pokemon);
 
-                total += this.recurse();
-                count++;
+                total += this.recurse() * frequency;
+                count += frequency;
 
                 this.field.clear();
                 this.hand.addCard(pokemon);

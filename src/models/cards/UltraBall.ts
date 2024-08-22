@@ -3,8 +3,8 @@ import Simulation from "../Simulation";
 
 export default function UltraBall(simulation: Simulation, deck: CardCollection, hand: CardCollection, passPercentage: number): number {
     if (hand.length() < 3) return passPercentage;
-    const discardedCardCombinations = hand.getCombinations(2);
-    for (let discardedCardCombination of discardedCardCombinations) {
+    const discardedCardCombinations = hand.getCombinationsWithFrequencies(2);
+    for (let [discardedCardCombination, _] of discardedCardCombinations) {
         hand.removeCards(discardedCardCombination);
 
         for (let pokemon of deck.iteratePokemon()) {

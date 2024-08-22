@@ -3,19 +3,19 @@ import Simulation from "../Simulation";
 
 export default function SquawkabillyEx(simulation: Simulation, deck: CardCollection, hand: CardCollection) {
     simulation.usedSquawkAndSeize = true;
-    const oldHand = hand.getUniqueCombinations(hand.length())[0];
+    const oldHand = hand.iterateCards();
     hand.clear();
 
     let total = 0;
     let count = 0;
 
-    const drawnCardCombinations = deck.getUniqueCombinations(6);
-    for (let drawnCards of drawnCardCombinations) {
+    const drawnCardCombinationsWithFrequencies = deck.getCombinationsWithFrequencies(6);
+    for (let [drawnCards, frequency] of drawnCardCombinationsWithFrequencies) {
         deck.removeCards(drawnCards);
         hand.addCards(drawnCards);
 
-        total += simulation.recurse();
-        count++;
+        total += simulation.recurse() * frequency;
+        count += frequency;
 
         deck.addCards(drawnCards);
         hand.removeCards(drawnCards);
