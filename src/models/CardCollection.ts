@@ -21,9 +21,9 @@ class CardCollection {
         for (let card of cards) this.addCard(card);
     }
 
-    addCard(card: Card) {
+    addCard(card: Card, n = 1) {
         const currentCount = this.cards.get(card) || 0;
-        this.cards.set(card, currentCount + 1);
+        this.cards.set(card, currentCount + n);
     }
 
     removeCards(cards: Card[]) {
@@ -47,6 +47,7 @@ class CardCollection {
         );
     }
 
+    // Ultra Ball
     getCombinations(n: number): Card[][] {
         const cards = Array.from(this.cards.keys());
         const counts = Array.from(this.cards.values());
@@ -70,6 +71,35 @@ class CardCollection {
         }
 
         recurse(0, []);
+        return result;
+    }
+
+    // Drawing Cards
+    getUniqueCombinations(n: number): Card[][] {
+        const cards = Array.from(this.cards.keys());
+        const counts = Array.from(this.cards.values());
+
+        const result: Card[][] = [];
+
+        function recurse(i: number, j: number, currentCombination: Card[]) {
+            if (currentCombination.length === n) {
+                result.push([...currentCombination]);
+                return;
+            }
+
+            if (j >= counts[i]) {
+                recurse(i + 1, 0, currentCombination);
+                return;
+            }
+
+            if (i >= cards.length) return;
+            recurse(i, j + 1, currentCombination);
+            currentCombination.push(cards[i]);
+            recurse(i, j + 1, currentCombination);
+            currentCombination.pop();
+        }
+
+        recurse(0, 0, []);
         return result;
     }
 }

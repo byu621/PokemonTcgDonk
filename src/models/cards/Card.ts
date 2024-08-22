@@ -3,9 +3,9 @@ interface Card {
     type: CardType
 }
 
-type CardPokemon = 'Brute Bonnet' | 'Iron Valiant'
+export type CardPokemon = 'Brute Bonnet' | 'Iron Valiant'
 type CardTool = 'Ancient Booster Energy Capsule'
-type CardItem = 'Nest Ball' | 'Ultra Ball' | 'Trekking Shoes'
+type CardItem = 'Nest Ball' | 'Ultra Ball' | 'Trekking Shoes' | 'Switch'
 
 type CardType = 'pokemon' | 'tool' | 'item'
 export type CardName = CardPokemon | CardTool | CardItem

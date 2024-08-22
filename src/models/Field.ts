@@ -1,21 +1,16 @@
-import Card from "./cards/Card";
+import Card, { CardPokemon } from "./cards/Card";
 
-interface ActivePokemon {
-    name: string;
-    tool: number;
-}
-
-interface BenchedPokemon {
-    name: string;
+interface Pokemon {
+    name: CardPokemon;
     tool: number;
 }
 
 class Field {
-    private active?: ActivePokemon;
-    private bench: BenchedPokemon[] = [];
+    private active?: Pokemon;
+    private bench: Pokemon[] = [];
 
     setActive(card: Card) {
-        this.active = { name: card.name, tool: 0 }
+        this.active = { name: card.name as CardPokemon, tool: 0 }
     }
 
     numberOfPokemon() {
@@ -27,7 +22,7 @@ class Field {
     }
 
     benchPokemon(card: Card) {
-        this.bench.push({ name: card.name, tool: 0 });
+        this.bench.push({ name: card.name as CardPokemon, tool: 0 });
     }
 
     revertBenchPokemon() {
@@ -54,10 +49,19 @@ class Field {
         return false;
     }
 
-    isWin() {
-        if (this.active!.tool === 1) return true;
-        if (this.bench.some(e => e.tool === 1)) return true;
-        return false;
+    damage() {
+        const poison = this.active!.tool === 1 || this.bench.some(e => e.tool === 1);
+        if (poison) return 10;
+        return 0;
+    }
+
+    switchPokemon(i: number) {
+        const newActivePokemon = this.bench.splice(i, 1, this.active!)[0];
+        this.active = newActivePokemon;
+    }
+
+    isActiveIronValiant() {
+        return this.active?.name === 'Iron Valiant'
     }
 }
 
