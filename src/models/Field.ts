@@ -63,6 +63,11 @@ class Field {
     isActiveIronValiant() {
         return this.active?.name === 'Iron Valiant'
     }
+
+    includesPokemon(name: CardPokemon) {
+        if (this.active!.name === name) return true;
+        return this.bench.some(e => e.name === name);
+    }
 }
 
 export default Field;

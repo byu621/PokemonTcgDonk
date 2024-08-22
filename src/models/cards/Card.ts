@@ -3,7 +3,7 @@ interface Card {
     type: CardType
 }
 
-export type CardPokemon = 'Brute Bonnet' | 'Iron Valiant'
+export type CardPokemon = 'Brute Bonnet' | 'Iron Valiant' | 'Squawkabilly ex'
 type CardTool = 'Ancient Booster Energy Capsule'
 type CardItem = 'Nest Ball' | 'Ultra Ball' | 'Trekking Shoes' | 'Switch'
 

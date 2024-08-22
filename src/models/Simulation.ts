@@ -1,5 +1,6 @@
 import CardCollection from "./CardCollection";
 import NestBall from "./cards/NestBall";
+import SquawkabillyEx from "./cards/SquawkabillyEx";
 import Switch from "./cards/Switch";
 import UltraBall from "./cards/UltraBall";
 import Field from "./Field";
@@ -16,19 +17,22 @@ class Simulation {
     private hand = new CardCollection();
     private field = new Field();
     damage = 0;
+    usedSquawkAndSeize = false;
+    usedSupporter = false;
 
     constructor() {
+        this.deck.addCard({ name: 'Squawkabilly ex', type: 'pokemon' }, 1)
         this.deck.addCard({ name: 'Iron Valiant', type: 'pokemon' }, 4);
         this.deck.addCard({ name: 'Switch', type: 'item' }, 4);
-        // this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' }, 4);
-        // this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' }, 4);
+        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' }, 6);
+        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' }, 1);
         // this.deck.addCard({ name: 'Ultra Ball', type: 'item' }, 4);
         // this.deck.addCard({ name: 'Nest Ball', type: 'item' }, 4);
         // this.deck.addCard({ name: 'Trekking Shoes', type: 'item' }, 4);
     }
 
     simulate() {
-        return this.start(4);
+        return this.start(2);
     }
 
     recurse(): number {
@@ -71,6 +75,10 @@ class Simulation {
             }
 
             this.hand.addCard(card);
+        }
+
+        if (!this.usedSquawkAndSeize && this.field.includesPokemon('Squawkabilly ex')) {
+            passPercentage = Math.max(SquawkabillyEx(this, this.deck, this.hand), passPercentage);
         }
 
         return passPercentage;
