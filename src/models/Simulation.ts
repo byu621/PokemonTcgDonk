@@ -16,19 +16,21 @@ class Simulation {
     private deck = new CardCollection();
     private hand = new CardCollection();
     private field = new Field();
+    private healthPoints = 10;
     damage = 0;
     usedSquawkAndSeize = false;
     usedSupporter = false;
+    count = 0;
 
     constructor() {
         this.deck.addCard({ name: 'Squawkabilly ex', type: 'pokemon' }, 2)
         this.deck.addCard({ name: 'Iron Valiant', type: 'pokemon' }, 4);
         this.deck.addCard({ name: 'Switch', type: 'item' }, 4);
-        this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' }, 4);
-        this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' }, 4);
-        // this.deck.addCard({ name: 'Ultra Ball', type: 'item' }, 4);
-        // this.deck.addCard({ name: 'Nest Ball', type: 'item' }, 4);
-        // this.deck.addCard({ name: 'Trekking Shoes', type: 'item' }, 4);
+        // this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' }, 4);
+        // this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' }, 4);
+        this.deck.addCard({ name: 'Ultra Ball', type: 'item' }, 4);
+        this.deck.addCard({ name: 'Nest Ball', type: 'item' }, 4);
+        // this.deck.addCard({ name: 'Trekking Shoes', type: 'item' }, 1);
     }
 
     simulate() {
@@ -36,6 +38,7 @@ class Simulation {
     }
 
     recurse(): number {
+        this.count++;
         if (this.field.isInvalid()) return 0;
         if (this.isWin()) return 1;
 
@@ -48,6 +51,10 @@ class Simulation {
                 this.field.benchPokemon(card);
                 passPercentage = Math.max(this.recurse(), passPercentage);
                 this.field.revertBenchPokemon();
+            }
+
+            if (card.name === 'Switch') {
+                passPercentage = Switch(this, this.field, passPercentage);
             }
 
             if (card.type === 'tool') {
@@ -68,10 +75,6 @@ class Simulation {
 
             if (card.name === 'Trekking Shoes') {
                 passPercentage = Math.max(this.drawN(1), passPercentage);
-            }
-
-            if (card.name === 'Switch') {
-                passPercentage = Switch(this, this.field, passPercentage);
             }
 
             this.hand.addCard(card);
@@ -134,7 +137,7 @@ class Simulation {
     }
 
     isWin() {
-        return (this.damage + this.field.damage() >= 10)
+        return (this.damage + this.field.damage() >= this.healthPoints)
     }
 }
 
