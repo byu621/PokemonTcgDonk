@@ -18,7 +18,6 @@ class Game {
     simulate1000() {
         const simulation = new Simulation();
         const passPercentage = simulation.simulate();
-        console.log(simulation.count)
         return passPercentage;
     }
 }

@@ -20,7 +20,6 @@ class Simulation {
     damage = 0;
     usedSquawkAndSeize = false;
     usedSupporter = false;
-    count = 0;
 
     constructor() {
         this.deck.addCard({ name: 'Squawkabilly ex', type: 'pokemon' }, 2)
@@ -38,7 +37,6 @@ class Simulation {
     }
 
     recurse(): number {
-        this.count++;
         if (this.field.isInvalid()) return 0;
         if (this.isWin()) return 1;
 
