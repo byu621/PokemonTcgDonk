@@ -1,5 +1,5 @@
 import './Card.css'
-import { CardName } from './models/cards/Card';
+import { CardImages, CardName, CardNames } from './models/cards/Card';
 
 interface Props {
     name: CardName;
@@ -8,5 +8,10 @@ interface Props {
 
 export default function Card({name, onClick}: Props)
 {
-    return <button className='card' onClick={() => onClick(name)}>{name}</button>
+    const index = CardNames.indexOf(name);
+    const cardImageUrl = CardImages[index];
+    return <div className="card">
+        <button onClick={() => onClick(name)}>{name}</button>
+        <span><img src={cardImageUrl} alt="image"/>      </span>
+    </div>
 }

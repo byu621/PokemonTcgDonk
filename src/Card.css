@@ -1,5 +1,21 @@
 .card {
+    position: relative;
+}
+
+.card button {
     width: 100%;
     padding: 0.1em 0;
-    font-weight: normal
+    font-weight: normal;
+}
+
+.card span {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    z-index: 9999;
+}
+
+.card:hover span {
+    top: 30px;
+    left: 0;
 }

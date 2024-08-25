@@ -40,6 +40,11 @@ function App() {
     <>
       <div className='introduction'>
         Build your deck
+        <p>In the Pokemon TCG, a donk is characterized as knocking out the opponents last remaining pokemon for the win.
+        Normally you can't attack on the first turn, but there are some cards that allow you to damage the opponent's pokemon without attacking.
+        This website allows you to caclulate the odds of getting a donk.</p>
+        <p>Happy donking</p>
+        <a target='_blank' href='https://github.com/byu621'>https://github.com/byu621</a>
       </div>
       <div className='center'>
         <div className='pool'>
@@ -58,7 +63,7 @@ function App() {
         <Settings healthPoints={healthPoints} setHealthPoints={setHealthPoints} startingHandSize={startingHandSize} setStartingHandSize={setStartingHandSize} onCalculate={onCalculate} />
         <div className='results'>
           Results
-          <div>{calculationResult}</div>
+          <div>{Number.isNaN(calculationResult) ? '...' : calculationResult}</div>
         </div>
       </div>
       {/* <p>{game.simulate1000()}</p> */}

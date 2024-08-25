@@ -7,8 +7,10 @@
 .introduction {
   font-size: larger;
   font-style: italic;
-  letter-spacing: 0.25rem;
-  height: 20vh;
+  letter-spacing: 0.1rem;
+  height: 30vh;
+  width: 80vw;
+  font-family: monospace;
 }
 
 .center {
