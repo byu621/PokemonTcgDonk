@@ -2,20 +2,38 @@ import { useState } from 'react';
 import './App.css'
 import Card from './Card';
 import DeckCard from './DeckCard';
-import { CardName, Cards } from './models/cards/Card';
-import Game from './models/Game'
+import { CardName, CardNames, Cards } from './models/cards/Card';
+import Settings from './Components/Settings';
+import Simulation from './models/Simulation';
 
 function App() {
   const [deckCounts, setDeckCounts] = useState<number[]>(Array(Cards.length).fill(0));
-  const game = new Game();
+  const [healthPoints, setHealthPoints] = useState(10);
+  const [startingHandSize, setStartingHandSize] = useState(2);
+  const [calculationResult, setCalculationResult] = useState(NaN);
 
   const onPoolCardClick = (name: CardName) => {
-    const index = Cards.indexOf(name);
+    const index = CardNames.indexOf(name);
     setDeckCounts(prevDeckCounts => {
       const newDeckCounts = [...prevDeckCounts];
       newDeckCounts[index]++;
       return newDeckCounts; // Return the new state
     });
+  }
+
+  const onDeckCardClick = (name: CardName) => {
+    const index = CardNames.indexOf(name);
+    setDeckCounts(prevDeckCounts => {
+      const newDeckCounts = [...prevDeckCounts];
+      newDeckCounts[index]--;
+      return newDeckCounts; // Return the new state
+    });
+  }
+
+  const onCalculate = () => {
+    const simulation = new Simulation(deckCounts, healthPoints, startingHandSize);
+    const passPercentage = simulation.simulate();
+    setCalculationResult(passPercentage);
   }
 
   return (
@@ -25,21 +43,22 @@ function App() {
       </div>
       <div className='center'>
         <div className='pool'>
+          Pool
           {Cards.map((e)=> (
-            <Card name={e} onPoolCardClick={onPoolCardClick}/>
+            <Card name={e.name} onClick={onPoolCardClick}/>
           ))}
         </div>
         <div className='deck'>
+          Deck
           {deckCounts.map((count, i) => {
             if (count === 0) return;
-            return <DeckCard name={Cards[i]} count={count}/>
+            return <DeckCard name={Cards[i].name} count={count} onClick={onDeckCardClick}/>
           })}
         </div>
-        <div className='settings'>
-          settings
-        </div>
+        <Settings healthPoints={healthPoints} setHealthPoints={setHealthPoints} startingHandSize={startingHandSize} setStartingHandSize={setStartingHandSize} onCalculate={onCalculate} />
         <div className='results'>
-          results
+          Results
+          <div>{calculationResult}</div>
         </div>
       </div>
       {/* <p>{game.simulate1000()}</p> */}

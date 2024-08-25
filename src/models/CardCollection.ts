@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import Card from './cards/Card';
+import Card, { Cards } from './cards/Card';
 import { combination } from './Math';
 
 class CardCollection {
@@ -46,6 +46,13 @@ class CardCollection {
         return Array.from(this.cards.keys()).filter(card =>
             card.type === 'pokemon'
         );
+    }
+
+    addCounts(counts: number[]) {
+        counts.forEach((count, i) => {
+            const card = Cards[i];
+            this.addCard(card, count);
+        })
     }
 
     getCombinationsWithFrequencies(n: number): Map<Card[], number> {

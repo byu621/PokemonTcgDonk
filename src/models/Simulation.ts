@@ -16,24 +16,20 @@ class Simulation {
     private deck = new CardCollection();
     private hand = new CardCollection();
     private field = new Field();
-    private healthPoints = 10;
+    private healthPoints;
+    private startingHandSize;
     damage = 0;
     usedSquawkAndSeize = false;
     usedSupporter = false;
 
-    constructor() {
-        this.deck.addCard({ name: 'Squawkabilly ex', type: 'pokemon' }, 2)
-        this.deck.addCard({ name: 'Iron Valiant', type: 'pokemon' }, 4);
-        this.deck.addCard({ name: 'Switch', type: 'item' }, 4);
-        // this.deck.addCard({ name: 'Brute Bonnet', type: 'pokemon' }, 4);
-        // this.deck.addCard({ name: 'Ancient Booster Energy Capsule', type: 'tool' }, 4);
-        this.deck.addCard({ name: 'Ultra Ball', type: 'item' }, 4);
-        this.deck.addCard({ name: 'Nest Ball', type: 'item' }, 4);
-        // this.deck.addCard({ name: 'Trekking Shoes', type: 'item' }, 1);
+    constructor(deckCounts: number[], healthPoints: number, startingHandSize: number) {
+        this.deck.addCounts(deckCounts);
+        this.healthPoints = healthPoints;
+        this.startingHandSize = startingHandSize;
     }
 
     simulate() {
-        return this.start(2);
+        return this.start(this.startingHandSize);
     }
 
     recurse(): number {
