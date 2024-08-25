@@ -20,6 +20,14 @@ export default function Settings({healthPoints, setHealthPoints, startingHandSiz
                 <label>Starting Hand Size: </label>
                 <input type='number' max={7} min={1} step={1} value={startingHandSize} onChange={(e) => setStartingHandSize(Number(e.target.value))}/>
             </div>
+            <div className='number-input'>
+                <label>Draw For Turn:</label>
+                <input type='checkbox' disabled/>
+            </div>
+            <div className='number-input'>
+                <label>Set Prizes:</label>
+                <input type='checkbox' disabled/>
+            </div>
             <button onClick={() => onCalculate()}>Calculate</button>
         </div>
     );

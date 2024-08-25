@@ -15,6 +15,7 @@ function App() {
   const onPoolCardClick = (name: CardName) => {
     const index = CardNames.indexOf(name);
     setDeckCounts(prevDeckCounts => {
+      if (prevDeckCounts[index] === 10) return prevDeckCounts;
       const newDeckCounts = [...prevDeckCounts];
       newDeckCounts[index]++;
       return newDeckCounts; // Return the new state
@@ -63,7 +64,7 @@ function App() {
         <Settings healthPoints={healthPoints} setHealthPoints={setHealthPoints} startingHandSize={startingHandSize} setStartingHandSize={setStartingHandSize} onCalculate={onCalculate} />
         <div className='results'>
           Results
-          <div>{Number.isNaN(calculationResult) ? '...' : calculationResult}</div>
+          <div>{Number.isNaN(calculationResult) ? '...' : calculationResult * 100}%</div>
         </div>
       </div>
       {/* <p>{game.simulate1000()}</p> */}
