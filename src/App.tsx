@@ -49,15 +49,15 @@ function App() {
       <div className='center'>
         <div className='pool'>
           Pool
-          {Cards.map((e)=> (
-            <Card name={e.name} onClick={onPoolCardClick}/>
+          {Cards.map((e, i)=> (
+            <Card key={i} name={e.name} onClick={onPoolCardClick}/>
           ))}
         </div>
         <div className='deck'>
           Deck
           {deckCounts.map((count, i) => {
             if (count === 0) return;
-            return <DeckCard name={Cards[i].name} count={count} onClick={onDeckCardClick}/>
+            return <DeckCard key={i} name={Cards[i].name} count={count} onClick={onDeckCardClick}/>
           })}
         </div>
         <Settings healthPoints={healthPoints} setHealthPoints={setHealthPoints} startingHandSize={startingHandSize} setStartingHandSize={setStartingHandSize} onCalculate={onCalculate} />

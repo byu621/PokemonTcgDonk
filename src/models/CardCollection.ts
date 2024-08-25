@@ -23,6 +23,7 @@ class CardCollection {
     }
 
     addCard(card: Card, n = 1) {
+        if (n === 0) return;
         const currentCount = this.cards.get(card) || 0;
         this.cards.set(card, currentCount + n);
     }
